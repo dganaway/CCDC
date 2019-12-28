@@ -1,0 +1,13 @@
+Nmap Change password - “pfSsh.php playback changepassword admin”
+
+Change Password to Default on WebGUI:
+  Pfctl -d (disable firewall)
+  /etc/rc.initial.password
+  Can now login with admin (username) / pfsense (password) on GUI
+  Pfctl -e (enable firewall)
+  
+Add Firewall Rules:
+  Pass Example: easyrule pass wan tcp 1.2.3.4 192.168.0.4 80
+    easyrule pass <interface> <protocol> <source IP> <destination ip> [destination port]
+  Block Example: easyrule block wan 1.2.3.4
+    easyrule block <interface> <source IP>
