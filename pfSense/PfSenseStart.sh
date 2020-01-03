@@ -2,5 +2,8 @@
 
 pfSsh.php playback changepassword admin
 
-echo Users
-awk -F":" '{print $1}' /etc/passwd
+awk -F":" '{print "Login:" $1 "\tName:" $5 "\tHome:" $6}' /etc/passwd > passwdUsers.txt
+
+cat /etc/passwd | grep '/home' | cut -d: -f1 > homeUsers.txt
+
+service -e | cut -d/ -f4 > servicesList
