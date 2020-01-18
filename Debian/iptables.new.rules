@@ -17,12 +17,12 @@
 #-A FORWARD -i eth0 -o eth1 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
 #Allow HTTP
-#-A INPUT -p tcp --dport 80 -j ACCEPT
+#-A INPUT -p tcp --dport 80 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
 #-A INPUT -i eth0 -p tcp -m tcp --dport 80 -j ACCEPT
 #-A INPUT -i eth0 -p tcp -m tcp --dport 80 -j ACCEPT
 
 #Allow HTTPS
-#-A INPUT -p tcp --dport 443 -j ACCEPT
+#-A INPUT -p tcp --dport 443 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
 #-A INPUT -p tcp --dport 443 -j ACCEPT
 #-A INPUT -i etho0 -p tcp -m tcp --dport 443 -j ACCEPT
 
