@@ -4,6 +4,9 @@
 --policy INPUT DROP
 #--policy FORWARD DROP
 
+#Accepts all established inbound connections
+-A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
+
 #Allow HTTP
 #-A INPUT -p tcp --dport 80 -j ACCEPT
 #-A INPUT -p tcp --dport 80  -j ACCEPT
@@ -31,5 +34,13 @@
 #Allow POP3
 #-A INPUT -p tcp --dport 110 -d 10.10.10.10 -j ACCEPT
 #-A INPUT -p tcp --dport 995 -d 10.10.10.10 -j ACCEPT
+
+# log iptables denied calls (access via 'dmesg' command)
+#-N LOGGING
+#-A INPUT -j LOGGING
+#-A OUTPUT -j LOGGING
+#-A LOGGING -m limit --limit 5/min -j LOG --log-prefix "iptables denied: " --log-level 4
+#-A LOGGING -j DROP
+#-A INPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied: " --log-level 7
 
 COMMIT
