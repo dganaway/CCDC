@@ -35,7 +35,7 @@
 #-A INPUT -p tcp --dport 110 -d 10.10.10.10 -j ACCEPT
 #-A INPUT -p tcp --dport 995 -d 10.10.10.10 -j ACCEPT
 
-# log iptables denied calls (access via 'dmesg' command)
+# log iptables denied
 #-N LOGGING
 #-A INPUT -j LOGGING
 #-A OUTPUT -j LOGGING
