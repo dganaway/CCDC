@@ -35,3 +35,5 @@ iptables --policy FORWARD DROP
 #Allow POP3
 #iptables -A INPUT -p tcp --dport 110 -s 10.10.10.10 -j ACCEPT
 #iptables -A INPUT -p tcp --dport 995 -s 10.10.10.10 -j ACCEPT
+
+COMMIT
