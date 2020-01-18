@@ -1,8 +1,6 @@
 *filter
 
-#Drop all inbound and forward
---policy INPUT DROP
-#--policy FORWARD DROP
+-A INPUT -i lo -j ACCEPT
 
 #Accepts all established inbound connections
 -A INPUT -m conntrack --ctstate RELATED,ESTABLISHED -j ACCEPT
@@ -10,30 +8,41 @@
 #Accepts all established forwarded connections
 #-A FORWARD -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
+# Allow outgoing connections from the LAN side.
+#-A FORWARD -i eth1 -o eth0 -j ACCEPT
+
+# Allow established connections, and those not coming from the outside
+iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+iptables -A INPUT -m conntrack --ctstate NEW -i ! eth1 -j ACCEPT
+iptables -A FORWARD -i eth0 -o eth1 -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
 #Allow HTTP
 #-A INPUT -p tcp --dport 80 -j ACCEPT
-#-A INPUT -p tcp --dport 80  -j ACCEPT
+#-A INPUT -i eth0 -p tcp -m tcp --dport 80 -j ACCEPT
+#-A INPUT -i eth0 -p tcp -m tcp --dport 80 -j ACCEPT
 
 #Allow HTTPS
 #-A INPUT -p tcp --dport 443 -j ACCEPT
 #-A INPUT -p tcp --dport 443 -j ACCEPT
+#-A INPUT -i etho0 -p tcp -m tcp --dport 443 -j ACCEPT
 
 #Allow SSH
 #-A INPUT -p tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
 #-A INPUT -p tcp --dport 22 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT
 #-A INPUT -p tcp --dport 22 -d 10.10.10.10 -j ACCEPT
 #-A INPUT -p tcp --dport 22 -d 10.10.10.10 -j ACCEPT
+#-A INPUT -i eth0 -p tcp -m tcp --dport 22 -d 10.10.10.10 -j ACCEPT
 
 #Allow DNS
-#-A INPUT -p tcp --dport 53 -d 10.10.10.10 -j ACCEPT
+#-A INPUT -i eth0 -p tcp -m tcp --dport 53 -d 10.10.10.10 -j ACCEPT
 #-A INPUT -p udp --dport 53 -d 10.10.10.10 -j ACCEPT
 
 #Allow IMAP
-#-A INPUT -p tcp --dport 143 -d 10.10.10.10 -j ACCEPT
+#-A INPUT -i eth0 -p tcp -m tcp --dport 143 -d 10.10.10.10 -j ACCEPT
 #-A INPUT -p tcp --dport 994 -d 10.10.10.10 -j ACCEPT
 
 #Allow POP3
-#-A INPUT -p tcp --dport 110 -d 10.10.10.10 -j ACCEPT
+#-A INPUT -i eth0 -p tcp -m tcp --dport 110 -d 10.10.10.10 -j ACCEPT
 #-A INPUT -p tcp --dport 995 -d 10.10.10.10 -j ACCEPT
 
 # log iptables denied
@@ -43,5 +52,10 @@
 #-A LOGGING -m limit --limit 5/min -j LOG --log-prefix "iptables denied: " --log-level 4
 #-A LOGGING -j DROP
 #-A INPUT -m limit --limit 5/min -j LOG --log-prefix "iptables denied: " --log-level 7
+
+#Drop all inbound and forward
+-A INPUT -i eth0 -j DROP
+#--policy INPUT DROP
+#--policy FORWARD DROP
 
 COMMIT
