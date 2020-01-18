@@ -2,7 +2,7 @@
 
 #Drop all inbound and forward
 --policy INPUT DROP
---policy FORWARD DROP
+#--policy FORWARD DROP
 
 #Allow HTTP
 #-A INPUT -p tcp --dport 80 -j ACCEPT
